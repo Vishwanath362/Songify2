@@ -29,7 +29,7 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/songs');
+                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/songs`);
                
                 setSongs(response.data);
             }
@@ -55,7 +55,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const appendSongs = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/songs');
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/songs`);
             console.log("Songs refreshed:", response.data);
             setSongs(response.data);
         } catch (err) {
@@ -65,7 +65,7 @@ export const AuthContextProvider = ({ children }) => {
     const addLike = async (songId) => {
         try {
             const res = await axios.post(
-                'http://localhost:3000/api/addLike',
+                `${process.env.REACT_APP_API_BASE_URL}/api/addLike`,
                 { songId },
                 {
                     headers: {
@@ -83,7 +83,7 @@ export const AuthContextProvider = ({ children }) => {
     const addPlayCount = async(songId)=>{
         try {
             const res = await axios.post(
-                'http://localhost:3000/api/addPlayCount',
+                `${process.env.REACT_APP_API_BASE_URL}/api/addPlayCount`,
                 { songId },
                 {
                     headers: {
@@ -99,7 +99,7 @@ export const AuthContextProvider = ({ children }) => {
     const getLikedSongs = async () => {
         try {
             const response = await axios.get(
-                'http://localhost:3000/api/liked-songs',
+                `${process.env.REACT_APP_API_BASE_URL}/api/liked-songs`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,

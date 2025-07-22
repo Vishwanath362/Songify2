@@ -17,7 +17,7 @@ const UploadAudio = () => {
     if (!audioFile || !userID) return;
     try {
       const publicId = `${userID}-${audioFile.name}`;
-      const signatureResponse = await axios.post("http://localhost:3000/api/get-audio-signature", { public_id: publicId });
+      const signatureResponse = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/get-audio-signature`, { public_id: publicId });
       const { timestamp, signature, apiKey, cloudName } = signatureResponse.data;
       const formData = new FormData();
       formData.append("file", audioFile);
@@ -41,7 +41,7 @@ const UploadAudio = () => {
         }
       );
       setAudioUrl(uploadResponse.data.secure_url);
-      await axios.post("http://localhost:3000/api/save-song", {
+      await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/save-song`, {
         title,
         genre,
         visibility,
