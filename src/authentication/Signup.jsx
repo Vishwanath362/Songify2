@@ -29,7 +29,7 @@ export const Signup = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await axios.post('http://localhost:3000/api/signup', formData);
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/signup`, formData);
       setFormData({ name: '', email: '', password: '' });
       const { token } = response.data;
       if (token) {

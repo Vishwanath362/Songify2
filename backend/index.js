@@ -39,8 +39,9 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://songify-frontend.onrender.com', // Add your frontend URL here
-    'https://songify2-ui9z.onrender.com' // Add your actual frontend URL
+    'https://songify-v4q3.onrender.com', // Your backend URL
+    // Add your frontend URL here when you know it
+    /\.onrender\.com$/ // Allow any onrender.com subdomain
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],

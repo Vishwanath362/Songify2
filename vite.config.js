@@ -4,11 +4,22 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: './', // ✅ Fix for Netlify/relative URLs
-
+  
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'esbuild', // Use esbuild instead of terser
+  },
+  
   server: {
     proxy: {
-      '/api': 'http://localhost:3000', // ✅ Only used during local dev
+      '/api': 'http://localhost:3000', // Only used during local dev
     },
   },
+  
+  preview: {
+    port: 3000,
+    host: true
+  }
 })
