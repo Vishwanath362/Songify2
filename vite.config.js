@@ -1,14 +1,14 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-// import tailwindcss from '@tailwindcss/vite'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [react()],
-  base: './',
+  plugins: [react(), tailwindcss()],
+  base: './', // ✅ Fix for Netlify/relative URLs
 
   server: {
     proxy: {
-      '/api': 'http://localhost:3000', // Only for local dev!
+      '/api': 'http://localhost:3000', // ✅ Only used during local dev
     },
   },
 })
