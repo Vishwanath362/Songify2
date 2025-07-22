@@ -370,4 +370,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
+app.get('/health', (req, res) => {
+  res.send('Backend is healthy!');
+});
+
 app.listen(process.env.PORT, () => console.log("✅ Proxy server running"));
