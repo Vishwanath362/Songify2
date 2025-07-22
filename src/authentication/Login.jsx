@@ -4,6 +4,9 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "./Auth";
 
+// Environment variable with fallback
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com';
+
 export const Login = () => {
   const [focusedField, setFocusedField] = useState(null);
   const [error, setError] = useState(null);
@@ -29,7 +32,7 @@ export const Login = () => {
     setError(null);
     setSuccess(null);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/api/login`, formData);
+      const response = await axios.post(`${API_BASE_URL}/api/login`, formData);
       const { token } = response.data;
       localStorage.setItem('token', token);
       handleLogin(token);

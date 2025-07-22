@@ -2,6 +2,12 @@ import { useContext, useState, createContext, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { set } from "mongoose";
+
+// Environment variable with fallback
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com';
+
+console.log('API_BASE_URL:', API_BASE_URL); // Debug log
+
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -29,7 +35,7 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/songs`);
+                const response = await axios.get(`${API_BASE_URL}/api/songs`);
                
                 setSongs(response.data);
             }
@@ -55,7 +61,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const appendSongs = async () => {
         try {
-            const response = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/songs`);
+            const response = await axios.get(`${API_BASE_URL}/api/songs`);
             console.log("Songs refreshed:", response.data);
             setSongs(response.data);
         } catch (err) {
@@ -65,7 +71,7 @@ export const AuthContextProvider = ({ children }) => {
     const addLike = async (songId) => {
         try {
             const res = await axios.post(
-                `${process.env.REACT_APP_API_BASE_URL}/api/addLike`,
+                `${API_BASE_URL}/api/addLike`,
                 { songId },
                 {
                     headers: {
@@ -83,7 +89,7 @@ export const AuthContextProvider = ({ children }) => {
     const addPlayCount = async(songId)=>{
         try {
             const res = await axios.post(
-                `${process.env.REACT_APP_API_BASE_URL}/api/addPlayCount`,
+                `${API_BASE_URL}/api/addPlayCount`,
                 { songId },
                 {
                     headers: {
@@ -99,7 +105,7 @@ export const AuthContextProvider = ({ children }) => {
     const getLikedSongs = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_API_BASE_URL}/api/liked-songs`,
+                `${API_BASE_URL}/api/liked-songs`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
