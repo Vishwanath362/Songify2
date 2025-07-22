@@ -13,6 +13,10 @@ const authenticateToken = require('./middleware/authenticateToken');
 
 dotenv.config({ path: '../.env' });
 
+// Debug: Check if JWT_SECRET is loaded
+console.log('JWT_SECRET loaded:', !!process.env.JWT_SECRET);
+console.log('JWT_SECRET length:', process.env.JWT_SECRET?.length);
+
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -34,6 +38,13 @@ const { log } = require("console");
 //   password: "1"
 // }]
 const secret = process.env.JWT_SECRET;
+
+// Debug: Check JWT_SECRET
+// if (!secret) {
+//   console.error('❌ JWT_SECRET is not loaded from environment variables!');
+// } else {
+//   console.log('✅ JWT_SECRET loaded successfully');
+// }
 app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -75,13 +86,19 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email); // Debug log
+    
     const user = await User.findOne({ email });
 
     if (!user) {
+      console.log('User not found for email:', email); // Debug log
       return res.status(404).json({ message: "Invalid User Credentials" });
     }
 
+    // console.log('User found, checking password...'); // Debug log
     const isMatch = await user.matchPassword(password);
+    // console.log('Password match result:', isMatch); // Debug log
+    
     if (isMatch) {
       const token = jwt.sign({ id: user._id, name: user.name }, secret, {
         expiresIn: "1h"
@@ -97,11 +114,12 @@ app.post('/api/login', async (req, res) => {
         }
       });
     } else {
+      console.log('Password does not match'); // Debug log
       return res.status(401).json({ message: "Invalid User Credentials" });
     }
 
   } catch (error) {
-    console.log(error);
+    console.log('Login error:', error);
     return res.status(500).json({ message: "Internal server error" });
   }
 });
@@ -147,12 +165,13 @@ app.post("/api/get-audio-signature", async (req, res) => {
 
 
 
-mongoose.connect(process.env.MONGO_URI, {
+mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/songify", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
   .then(() => {
     console.log('✅ MongoDB connected successfully');
+    console.log('Database:', process.env.MONGO_URI ? 'Cloud (Atlas)' : 'Local');
   })
   .catch((err) => {
     console.error('❌ MongoDB connection error:', err);
@@ -236,6 +255,20 @@ app.get('/api/songs', async (req, res) => {
   }
 })
 
+// Temporary debug endpoint to check users
+app.get('/api/debug/users', async (req, res) => {
+  try {
+    const users = await User.find().select('name email createdAt');
+    return res.status(200).json({ 
+      count: users.length,
+      users: users
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error fetching users" })
+  }
+})
+
 
 
 app.post('/api/addLike', authenticateToken, async (req, res) => {
@@ -243,7 +276,7 @@ app.post('/api/addLike', authenticateToken, async (req, res) => {
   const userId = req.user.id;
 
   try {
-    console.log("addLike endpoint - songId:", songId, "userId:", userId);
+    // console.log("addLike endpoint - songId:", songId, "userId:", userId);
 
     const song = await Song.findById(songId);
     const user = await User.findById(userId);
@@ -337,4 +370,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
-app.listen(process.env.PORT, () => console.log("✅ Proxy server running"));
+app.listen(3000, () => console.log("✅ Proxy server running"));

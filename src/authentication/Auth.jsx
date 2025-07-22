@@ -18,7 +18,7 @@ export const AuthContextProvider = ({ children }) => {
         const token = localStorage.getItem("token");
         if (token) {
             const decoded = jwtDecode(token);
-            console.log("Decoded token:", decoded);
+            // console.log("Decoded token:", decoded);
             const name = decoded.name;
             const id = decoded.id;
             setUserName(name);
@@ -41,9 +41,9 @@ export const AuthContextProvider = ({ children }) => {
     }, [])
 
     const handleLogin = (t) => {
-        console.log("handleLogin is working");
-        console.log(t);
-        console.log(t.name)
+        // console.log("handleLogin is working");
+        // console.log(t);
+        // console.log(t.name)
         localStorage.setItem("token", t);
         setToken(t);
     };
@@ -74,7 +74,7 @@ export const AuthContextProvider = ({ children }) => {
                 }
             );
 
-            console.log("Song liked:", res.data);
+            // console.log("Song liked:", res.data);
         } catch (error) {
             console.error("Error liking song:", error.response?.data || error.message);
         }
