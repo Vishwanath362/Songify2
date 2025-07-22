@@ -370,4 +370,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: err.message || "Internal Server Error" });
 });
 
-app.listen(3000, () => console.log("✅ Proxy server running"));
+app.listen(process.env.PORT, () => console.log("✅ Proxy server running"));
