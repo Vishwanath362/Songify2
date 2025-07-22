@@ -24,7 +24,7 @@ export const Navbar = () => {
   return (
     <header className="w-full bg-white shadow z-20">
       <nav className="container mx-auto flex items-center justify-between py-2 px-3 md:px-6 h-16 md:h-20">
-        {/* Left logo/brand for mobile and desktop */}
+       
         <div className="flex items-center gap-2">
           <Music size={32} />
           <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-black">
@@ -32,7 +32,7 @@ export const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Nav links */}
+       
         <ul className="hidden md:flex items-center gap-6 text-base font-semibold ml-10">
           {navLinks.map((link) => (
             <li key={link.name}>
@@ -43,7 +43,7 @@ export const Navbar = () => {
           ))}
         </ul>
 
-        {/* Search (hidden on mobile, visible md+) */}
+       
         <div
           className={`hidden md:flex items-center h-12 p-1 bg-gray-500 w-[320px] lg:w-[420px] rounded-full border-2 transition ${
             clickedInput ? "border-4 border-black" : "border-transparent"
@@ -61,7 +61,7 @@ export const Navbar = () => {
           />
         </div>
 
-        {/* Desktop right actions */}
+      
         <ul className="hidden md:flex items-center gap-6 font-semibold ml-6">
           {actionLinks.map(link => (
             <li key={link.name}>
@@ -93,14 +93,14 @@ export const Navbar = () => {
             <>
               <li>
                 <Link to="/signup">
-                  <button className="text-gray-700 px-3 py-1 hover:text-black transition">
+                  <button className="text-gray-700 px-3 py-1 cursor-pointer hover:text-black transition">
                     Sign Up
                   </button>
                 </Link>
               </li>
               <li>
                 <Link to="/login">
-                  <button className="bg-white border border-gray-400 h-10 w-20 rounded-full hover:bg-gray-100 transition">
+                  <button className="bg-white border border-gray-400 h-10 w-20 rounded-full cursor-pointer hover:bg-gray-100 transition">
                     Login
                   </button>
                 </Link>
@@ -186,14 +186,14 @@ export const Navbar = () => {
               <>
                 <li>
                   <Link to="/signup" onClick={() => setMenuOpen(false)}>
-                    <button className="w-full text-gray-700 py-2 hover:text-black transition cursor-pointer">
+                    <button className="w-full text-gray-700 py-2 hover:text-black transition ">
                       Sign Up
                     </button>
                   </Link>
                 </li>
                 <li>
                   <Link to="/login" onClick={() => setMenuOpen(false)}>
-                    <button className="w-full bg-white border border-gray-400 h-10 rounded-full hover:bg-gray-100 transition cursor-pointer">
+                    <button className="w-full bg-white border border-gray-400 h-10 rounded-full hover:bg-gray-100 transition ">
                       Login
                     </button>
                   </Link>
