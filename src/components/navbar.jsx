@@ -186,14 +186,14 @@ export const Navbar = () => {
               <>
                 <li>
                   <Link to="/signup" onClick={() => setMenuOpen(false)}>
-                    <button className="w-full text-gray-700 py-2 hover:text-black transition">
+                    <button className="w-full text-gray-700 py-2 hover:text-black transition cursor-pointer">
                       Sign Up
                     </button>
                   </Link>
                 </li>
                 <li>
                   <Link to="/login" onClick={() => setMenuOpen(false)}>
-                    <button className="w-full bg-white border border-gray-400 h-10 rounded-full hover:bg-gray-100 transition">
+                    <button className="w-full bg-white border border-gray-400 h-10 rounded-full hover:bg-gray-100 transition cursor-pointer">
                       Login
                     </button>
                   </Link>
