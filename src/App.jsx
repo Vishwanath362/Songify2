@@ -4,7 +4,7 @@ import Navbar from './components/navbar'
 import Hero from './components/Hero'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer'
-import AboutUs from './components/AboutUs.'
+import AboutUs from './components/AboutUs'
 import React from 'react'
 import Signup from './authentication/Signup';
 import Login from './authentication/Login';
