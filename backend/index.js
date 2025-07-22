@@ -11,11 +11,22 @@ const cloudinary = require("cloudinary").v2;
 const Song = require("./models/song");
 const authenticateToken = require('./middleware/authenticateToken');
 
-dotenv.config({ path: '../.env' });
+// Load environment variables from the correct path
+dotenv.config();
+
+// Validate required environment variables
+const requiredEnvVars = ['JWT_SECRET', 'MONGO_URI', 'CLOUDINARY_CLOUD_NAME', 'CLOUDINARY_API_KEY', 'CLOUDINARY_API_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(envVar => !process.env[envVar]);
+
+if (missingEnvVars.length > 0) {
+  console.error('❌ Missing required environment variables:', missingEnvVars);
+  process.exit(1);
+}
 
 // Debug: Check if JWT_SECRET is loaded
-console.log('JWT_SECRET loaded:', !!process.env.JWT_SECRET);
-console.log('JWT_SECRET length:', process.env.JWT_SECRET?.length);
+console.log('✅ JWT_SECRET loaded:', !!process.env.JWT_SECRET);
+console.log('✅ MongoDB URI loaded:', !!process.env.MONGO_URI);
+console.log('✅ Cloudinary config loaded:', !!process.env.CLOUDINARY_CLOUD_NAME);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -23,8 +34,22 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-app.use(express.json());
-app.use(cors());
+// Enhanced CORS configuration for production
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://songify-frontend.onrender.com', // Add your frontend URL here
+    'https://songify2-ui9z.onrender.com' // Add your actual frontend URL
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+app.use(cors(corsOptions));
 const User = require("./models/users");
 const { upload } = require("./middleware/multer");
 const { log } = require("console");
@@ -374,4 +399,8 @@ app.get('/health', (req, res) => {
   res.send('Backend is healthy!');
 });
 
-app.listen(process.env.PORT, () => console.log("✅ Proxy server running"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+});

@@ -20,7 +20,7 @@ function App() {
       <AuthContextProvider>
         <Routes>
           {/* Public routes */}
-          <Route path='/' element={
+          <Route path={"/"} element={
             <>
               <Navbar />
               <Hero />
