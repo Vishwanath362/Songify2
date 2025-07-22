@@ -1,18 +1,18 @@
-import UploadAudio from './components/uploadAudio.jsx'
+import UploadAudio from './components/uploadAudio'
 import './App.css'
-import Navbar from './components/navbar.jsx'
-import Hero from './components/Hero.jsx'
+import Navbar from './components/navbar'
+import Hero from './components/Hero'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Footer from './components/footer.jsx'
-import AboutUs from './components/AboutUs.jsx'
+import Footer from './components/Footer'
+import AboutUs from './components/AboutUs.'
 import React from 'react'
-import Signup from './authentication/Signup.jsx';
-import Login from './authentication/Login.jsx';
-import { AuthContextProvider } from './authentication/Auth.jsx';
-import Dashboard from './components/Dashboard.jsx';
-import Songs from './components/Songs.jsx';
-import LikedSongs from './components/LikedSongs.jsx';
-import YourUploads from './components/YourUploads.jsx';
+import Signup from './authentication/Signup';
+import Login from './authentication/Login';
+import { AuthContextProvider } from './authentication/Auth';
+import Dashboard from './components/Dashboard';
+import Songs from './components/Songs';
+import LikedSongs from './components/LikedSongs';
+import YourUploads from './components/YourUploads';
 
 function App() {
   return (
