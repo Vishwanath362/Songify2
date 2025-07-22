@@ -18,6 +18,7 @@ export default defineConfig({
   },
   
   server: {
+    historyApiFallback: true, // Enable history API fallback for SPA
     proxy: {
       '/api': 'http://localhost:3000', // Only used during local dev
     },
@@ -25,6 +26,7 @@ export default defineConfig({
   
   preview: {
     port: 3000,
-    host: true
+    host: true,
+    historyApiFallback: true // Also for preview mode
   }
 })
