@@ -12,12 +12,12 @@ export const Navbar = () => {
 
   // navLinks for mapping
   const navLinks = [
-    { name: "Music", to: "/Dashboard" },
+    { name: "Music", to: "/dashboard" },
     { name: "Your Uploads", to: "/Dashboard/yourUploads" },
   ];
 
   const actionLinks = [
-    { name: "Browse", to: "/Dashboard" },
+    { name: "Browse", to: "/dashboard" },
     { name: "About Us", to: "/about" },
   ];
 
