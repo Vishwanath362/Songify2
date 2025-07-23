@@ -13,7 +13,7 @@ export const Navbar = () => {
   // navLinks for mapping
   const navLinks = [
     { name: "Music", to: "/dashboard" },
-    { name: "Your Uploads", to: "/Dashboard/yourUploads" },
+    { name: "Your Uploads", to: "/dashboard/yourUploads" },
   ];
 
   const actionLinks = [
