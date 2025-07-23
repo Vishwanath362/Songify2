@@ -39,7 +39,7 @@ export const Login = () => {
       setSuccess(true);
       setFormData({ email: '', password: '' });
       setTimeout(() => {
-        navigate("/Dashboard");
+        navigate("/dashboard");
       }, 1200);
     } catch (error) {
       if (error.response?.data) {

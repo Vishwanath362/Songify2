@@ -40,7 +40,7 @@ export const Signup = () => {
         handleLogin(token);
         setSuccess(true);
         setTimeout(() => {
-          navigate("/Dashboard");
+          navigate("/dashboard");
         }, 1200);
       } else setError(new Error("No token received from server"));
     } catch (error) {

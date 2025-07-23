@@ -13,11 +13,13 @@ import Dashboard from './components/Dashboard';
 import Songs from './components/Songs';
 import LikedSongs from './components/LikedSongs';
 import YourUploads from './components/YourUploads';
+import ErrorBoundary from './components/ErrorBoundary';
 
 function App() {
   return (
-    <Router>
-      <AuthContextProvider>
+    <ErrorBoundary>
+      <Router>
+        <AuthContextProvider>
         <Routes>
          
           <Route path="/" element={
@@ -46,6 +48,7 @@ function App() {
         </Routes>
       </AuthContextProvider>
     </Router>
+    </ErrorBoundary>
   )
 }
 export default App

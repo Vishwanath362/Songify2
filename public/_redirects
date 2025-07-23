@@ -1,5 +1,11 @@
-# Redirect all routes to index.html for client-side routing
-/*    /index.html   200
+# SPA routing fallback - must be first
+/dashboard/*  /index.html  200
+/signup      /index.html  200
+/login       /index.html  200
+/about       /index.html  200
 
-# API routes should not be redirected (if you have any)
-/api/*  /api/:splat  200
+# Catch-all rule for any other routes
+/*           /index.html  200
+
+# Prevent API routes from being redirected
+/api/*       /api/:splat  200
