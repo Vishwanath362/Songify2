@@ -378,7 +378,7 @@ app.post('/api/addPlayCount', authenticateToken, async (req, res) => {
   }
 });
 
-// Get liked songs for a user
+
 app.get('/api/liked-songs', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.id;
