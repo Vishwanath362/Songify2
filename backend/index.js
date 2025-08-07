@@ -34,8 +34,10 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
+    'http://localhost:5174',
     'https://songify-v4q3.onrender.com', // Your backend URL
-    // Add your frontend URL here when you know it
+    'https://songify2.onrender.com', // Your frontend URL
+    'https://songify-frontend.onrender.com', // Alternative frontend URL
     /\.onrender\.com$/ // Allow any onrender.com subdomain
   ],
   credentials: true,
@@ -46,6 +48,14 @@ const corsOptions = {
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cors(corsOptions));
+
+// Add middleware to log requests and CORS headers
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+  console.log('Origin:', req.headers.origin);
+  next();
+});
+
 const User = require("./models/users");
 const { upload } = require("./middleware/multer");
 const { log } = require("console");
