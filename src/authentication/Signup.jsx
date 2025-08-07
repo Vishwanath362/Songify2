@@ -4,8 +4,11 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "./Auth";
 
-// Environment variable with fallback
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com';
+// Environment variable with fallback - automatically detect local vs production
+const isLocalDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocalDevelopment 
+  ? 'http://localhost:3000' 
+  : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
 
 export const Signup = () => {
   const [focusedField, setFocusedField] = useState(null);
@@ -29,7 +32,7 @@ export const Signup = () => {
   const handleBlur = () => setFocusedField(null);
 
   const handleSubmit = async (e) => {
-    console.log("Form submitted");
+    console.log("Signup form submitted");
     console.log("API_BASE_URL:", API_BASE_URL);
     console.log("Form data:", formData);
     
@@ -41,6 +44,17 @@ export const Signup = () => {
     try {
       console.log("Making API call to:", `${API_BASE_URL}/api/signup`);
       
+      // First, try to wake up the backend with a quick health check
+      try {
+        console.log("Checking if backend is awake...");
+        await axios.get(`${API_BASE_URL}/health`, { timeout: 5000 });
+        console.log("Backend is awake!");
+      } catch (healthError) {
+        console.log("Backend is cold starting, this may take a moment...");
+        setError("Server is starting up, please wait a moment and try again...");
+        setTimeout(() => setError(null), 3000);
+      }
+      
       // Add timeout for slow backend startup
       const response = await axios.post(`${API_BASE_URL}/api/signup`, formData, {
         timeout: 60000, // 60 second timeout for cold starts
@@ -49,13 +63,13 @@ export const Signup = () => {
         }
       });
       
-      console.log("API Response:", response.data);
+      console.log("Signup API Response:", response.data);
       
       setFormData({ name: '', email: '', password: '' });
       const { token } = response.data;
       
       if (token) {
-        console.log("Token received, storing and redirecting");
+        console.log("Signup successful, storing token");
         localStorage.setItem('token', token);
         handleLogin(token);
         setSuccess(true);
@@ -63,7 +77,7 @@ export const Signup = () => {
           navigate("/dashboard");
         }, 1200);
       } else {
-        console.error("No token in response");
+        console.error("No token in signup response");
         setError("No authentication token received from server");
       }
     } catch (error) {
@@ -71,12 +85,12 @@ export const Signup = () => {
       console.error("Error response:", error.response?.data);
       console.error("Error status:", error.response?.status);
       
-      let errorMessage = "An error occurred during signup.";
+      let errorMessage = "Signup failed. Please try again.";
       
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        errorMessage = "Request timed out. The server might be starting up. Please try again in a moment.";
+        errorMessage = "Request timed out. The server is starting up - please wait 30 seconds and try again.";
       } else if (error.response?.status === 0 || !error.response) {
-        errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
+        errorMessage = "Cannot connect to server. The backend might be starting up. Please wait a moment and try again.";
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {

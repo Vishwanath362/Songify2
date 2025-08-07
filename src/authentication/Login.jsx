@@ -4,8 +4,11 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "./Auth";
 
-// Environment variable with fallback
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com';
+// Environment variable with fallback - automatically detect local vs production
+const isLocalDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocalDevelopment 
+  ? 'http://localhost:3000' 
+  : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
 
 export const Login = () => {
   const [focusedField, setFocusedField] = useState(null);
@@ -41,6 +44,17 @@ export const Login = () => {
     try {
       console.log("Making API call to:", `${API_BASE_URL}/api/login`);
       
+      // First, try to wake up the backend with a quick health check
+      try {
+        console.log("Checking if backend is awake...");
+        await axios.get(`${API_BASE_URL}/health`, { timeout: 5000 });
+        console.log("Backend is awake!");
+      } catch (healthError) {
+        console.log("Backend is cold starting, this may take a moment...");
+        setError("Server is starting up, please wait a moment and try again...");
+        setTimeout(() => setError(null), 3000);
+      }
+      
       const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
         timeout: 60000, // 60 second timeout for cold starts
         headers: {
@@ -72,9 +86,9 @@ export const Login = () => {
       let errorMessage = "Login failed. Please try again.";
       
       if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        errorMessage = "Request timed out. The server might be starting up. Please try again in a moment.";
+        errorMessage = "Request timed out. The server is starting up - please wait 30 seconds and try again.";
       } else if (error.response?.status === 0 || !error.response) {
-        errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
+        errorMessage = "Cannot connect to server. The backend might be starting up. Please wait a moment and try again.";
       } else if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.message) {
@@ -169,6 +183,12 @@ export const Login = () => {
                 <span className="text-sm">{error}</span>
               </div>
             )}
+            {loading && (
+              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center gap-3 text-blue-400">
+                <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                <span className="text-sm">Logging you in... This may take a moment.</span>
+              </div>
+            )}
             {success && (
               <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-lg flex items-center gap-3 text-green-400">
                 <CheckCircle className="w-5 h-5 flex-shrink-0" />
@@ -177,9 +197,21 @@ export const Login = () => {
             )}
             <button
               type="submit"
-              className="w-full py-3 sm:py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:scale-[1.02]"
+              disabled={loading}
+              className={`w-full py-3 sm:py-4 font-semibold rounded-xl transition-all duration-300 shadow-lg transform ${
+                loading 
+                  ? 'bg-gray-600 cursor-not-allowed opacity-50' 
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 hover:shadow-green-500/25 hover:scale-[1.02]'
+              } text-white`}
             >
-              Login
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Logging In...
+                </div>
+              ) : (
+                'Login'
+              )}
             </button>
           </form>
           <div className="mt-6 text-center">
