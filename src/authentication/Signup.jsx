@@ -11,6 +11,7 @@ export const Signup = () => {
   const [focusedField, setFocusedField] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
   const { handleLogin } = useAuthContext();
   const navigate = useNavigate();
@@ -28,27 +29,63 @@ export const Signup = () => {
   const handleBlur = () => setFocusedField(null);
 
   const handleSubmit = async (e) => {
+    console.log("Form submitted");
+    console.log("API_BASE_URL:", API_BASE_URL);
+    console.log("Form data:", formData);
+    
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setLoading(true);
+    
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/signup`, formData);
+      console.log("Making API call to:", `${API_BASE_URL}/api/signup`);
+      
+      // Add timeout for slow backend startup
+      const response = await axios.post(`${API_BASE_URL}/api/signup`, formData, {
+        timeout: 60000, // 60 second timeout for cold starts
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("API Response:", response.data);
+      
       setFormData({ name: '', email: '', password: '' });
       const { token } = response.data;
+      
       if (token) {
+        console.log("Token received, storing and redirecting");
         localStorage.setItem('token', token);
         handleLogin(token);
         setSuccess(true);
         setTimeout(() => {
           navigate("/dashboard");
         }, 1200);
-      } else setError(new Error("No token received from server"));
+      } else {
+        console.error("No token in response");
+        setError("No authentication token received from server");
+      }
     } catch (error) {
-      setError(
-        error.response && error.response.data && error.response.data.message
-          ? error.response.data.message
-          : error.message || "An error occurred during signup."
-      );
+      console.error("Signup error:", error);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      
+      let errorMessage = "An error occurred during signup.";
+      
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = "Request timed out. The server might be starting up. Please try again in a moment.";
+      } else if (error.response?.status === 0 || !error.response) {
+        errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -164,11 +201,29 @@ export const Signup = () => {
                 <span className="text-sm">Account created! Redirecting...</span>
               </div>
             )}
+            {loading && (
+              <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg flex items-center gap-3 text-blue-400">
+                <div className="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin flex-shrink-0"></div>
+                <span className="text-sm">Creating your account... This may take a moment.</span>
+              </div>
+            )}
             <button
               type="submit"
-              className="w-full py-4 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-green-500/25 transform hover:scale-[1.02]"
+              disabled={loading}
+              className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 shadow-lg transform ${
+                loading 
+                  ? 'bg-gray-600 cursor-not-allowed opacity-50' 
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 hover:shadow-green-500/25 hover:scale-[1.02]'
+              } text-white`}
             >
-              Create Account
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Creating Account...
+                </div>
+              ) : (
+                'Create Account'
+              )}
             </button>
           </form>
           <div className="mt-6 text-center">

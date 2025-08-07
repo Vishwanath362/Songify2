@@ -11,6 +11,7 @@ export const Login = () => {
   const [focusedField, setFocusedField] = useState(null);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -28,25 +29,61 @@ export const Login = () => {
   };
 
   const handleSubmit = async (e) => {
+    console.log("Login form submitted");
+    console.log("API_BASE_URL:", API_BASE_URL);
+    console.log("Form data:", formData);
+    
     e.preventDefault();
     setError(null);
     setSuccess(null);
+    setLoading(true);
+    
     try {
-      const response = await axios.post(`${API_BASE_URL}/api/login`, formData);
+      console.log("Making API call to:", `${API_BASE_URL}/api/login`);
+      
+      const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {
+        timeout: 60000, // 60 second timeout for cold starts
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      console.log("Login API Response:", response.data);
+      
       const { token } = response.data;
-      localStorage.setItem('token', token);
-      handleLogin(token);
-      setSuccess(true);
-      setFormData({ email: '', password: '' });
-      setTimeout(() => {
-        navigate("/dashboard");
-      }, 1200);
-    } catch (error) {
-      if (error.response?.data) {
-        setError(error.response.data.message || "Login failed. Please try again.");
+      if (token) {
+        console.log("Login successful, storing token");
+        localStorage.setItem('token', token);
+        handleLogin(token);
+        setSuccess(true);
+        setFormData({ email: '', password: '' });
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 1200);
       } else {
-        setError("An unexpected error occurred. Please try again.");
+        console.error("No token in login response");
+        setError("No authentication token received from server");
       }
+    } catch (error) {
+      console.error("Login error:", error);
+      console.error("Error response:", error.response?.data);
+      console.error("Error status:", error.response?.status);
+      
+      let errorMessage = "Login failed. Please try again.";
+      
+      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+        errorMessage = "Request timed out. The server might be starting up. Please try again in a moment.";
+      } else if (error.response?.status === 0 || !error.response) {
+        errorMessage = "Cannot connect to server. Please check your internet connection and try again.";
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -10,7 +10,7 @@ export const Dashboard = () => {
 
   useEffect(() => {
     if (!token) {
-      navigate('/');
+      navigate('/login');
     }
   }, [token, navigate]);
 
