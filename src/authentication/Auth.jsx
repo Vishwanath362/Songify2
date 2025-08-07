@@ -6,8 +6,6 @@ import { set } from "mongoose";
 // Environment variable with fallback
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com';
 
-console.log('API_BASE_URL:', API_BASE_URL); // Debug log
-
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {

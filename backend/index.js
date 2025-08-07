@@ -23,11 +23,6 @@ if (missingEnvVars.length > 0) {
   process.exit(1);
 }
 
-// Debug: Check if JWT_SECRET is loaded
-console.log('✅ JWT_SECRET loaded:', !!process.env.JWT_SECRET);
-console.log('✅ MongoDB URI loaded:', !!process.env.MONGO_URI);
-console.log('✅ Cloudinary config loaded:', !!process.env.CLOUDINARY_CLOUD_NAME);
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -65,12 +60,7 @@ const { log } = require("console");
 // }]
 const secret = process.env.JWT_SECRET;
 
-// Debug: Check JWT_SECRET
-// if (!secret) {
-//   console.error('❌ JWT_SECRET is not loaded from environment variables!');
-// } else {
-//   console.log('✅ JWT_SECRET loaded successfully');
-// }
+
 app.post('/api/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -112,18 +102,18 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log('Login attempt for email:', email); // Debug log
+   
     
     const user = await User.findOne({ email });
 
     if (!user) {
-      console.log('User not found for email:', email); // Debug log
+     
       return res.status(404).json({ message: "Invalid User Credentials" });
     }
 
-    // console.log('User found, checking password...'); // Debug log
+  
     const isMatch = await user.matchPassword(password);
-    // console.log('Password match result:', isMatch); // Debug log
+   
     
     if (isMatch) {
       const token = jwt.sign({ id: user._id, name: user.name }, secret, {
