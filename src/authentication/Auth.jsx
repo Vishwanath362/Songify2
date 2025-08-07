@@ -71,19 +71,53 @@ export const AuthContextProvider = ({ children }) => {
     }
     const addLike = async (songId) => {
         try {
+             
+            if (!token) {
+                console.error("❌ No token available - user might not be logged in");
+                return;
+            }
+
+            // Check if token is expired
+            try {
+                const decoded = jwtDecode(token);
+                const now = Date.now() / 1000;
+                console.log("- Token expires at:", new Date(decoded.exp * 1000));
+                console.log("- Current time:", new Date());
+                console.log("- Token expired:", decoded.exp < now ? "❌ YES" : "✅ NO");
+                
+                if (decoded.exp < now) {
+                    console.error("❌ Token is expired! Please login again.");
+                    // Clear expired token
+                    localStorage.removeItem('token');
+                    setToken(null);
+                    return;
+                }
+            } catch (decodeError) {
+                console.error("❌ Failed to decode token:", decodeError);
+                return;
+            }
+
             const res = await axios.post(
                 `${API_BASE_URL}/api/addLike`,
                 { songId },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
                 }
             );
 
-            // console.log("Song liked:", res.data);
+            console.log("✅ Song liked successfully:", res.data);
         } catch (error) {
-            console.error("Error liking song:", error.response?.data || error.message);
+            console.error("❌ Error liking song:");
+            console.error("- Status:", error.response?.status);
+            console.error("- Message:", error.response?.data?.message || error.message);
+            console.error("- Full error:", error.response?.data || error.message);
+            
+            if (error.response?.status === 403) {
+                console.error("🔑 Token might be expired or invalid. Try logging in again.");
+            }
         }
     };
 

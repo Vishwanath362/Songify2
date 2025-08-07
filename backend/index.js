@@ -36,7 +36,7 @@ const corsOptions = {
     'http://localhost:5173',
     'http://localhost:5174',
     'https://songify-v4q3.onrender.com', // Your backend URL
-    'https://songify2.onrender.com', // Your frontend URL
+    'https://songify2.onrender.com', // Your frontend URL (confirmed)
     'https://songify-frontend.onrender.com', // Alternative frontend URL
     /\.onrender\.com$/ // Allow any onrender.com subdomain
   ],
