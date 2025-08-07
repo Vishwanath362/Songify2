@@ -416,7 +416,22 @@ app.use((err, req, res, next) => {
 });
 
 app.get('/health', (req, res) => {
-  res.send('Backend is healthy!');
+  res.status(200).json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
+// Add a simple ping endpoint to wake up the service
+app.get('/ping', (req, res) => {
+  res.status(200).json({ pong: true, time: Date.now() });
+});
+
+// Add a keep-alive endpoint that can be called periodically
+app.get('/keep-alive', (req, res) => {
+  res.status(200).send('Service is awake');
 });
 
 const PORT = process.env.PORT || 3000;
