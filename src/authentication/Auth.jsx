@@ -36,7 +36,12 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/songs`);
+                const response = await axios.get(`${API_BASE_URL}/api/songs`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                });
                
                 setSongs(response.data);
             }
@@ -62,7 +67,14 @@ export const AuthContextProvider = ({ children }) => {
 
     const appendSongs = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/songs`);
+            const response = await axios.get(`${API_BASE_URL}/api/songs`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                }
+            );
             console.log("Songs refreshed:", response.data);
             setSongs(response.data);
         } catch (err) {

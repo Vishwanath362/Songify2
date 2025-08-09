@@ -9,7 +9,7 @@ const API_BASE_URL = isLocalDevelopment
   : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
 
 const UploadAudio = () => {
-  const { userID, userName, appendSongs } = useAuthContext();
+  const { userID, userName, appendSongs,token } = useAuthContext();
   const [audioFile, setAudioFile] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
@@ -23,7 +23,14 @@ const UploadAudio = () => {
     if (!audioFile || !userID) return;
     try {
       const publicId = `${userID}-${audioFile.name}`;
-      const signatureResponse = await axios.post(`${API_BASE_URL}/api/get-audio-signature`, { public_id: publicId });
+      const signatureResponse = await axios.post(`${API_BASE_URL}/api/get-audio-signature`, { public_id: publicId },
+        {
+              headers: {
+                  Authorization: `Bearer ${token}`,
+                  'Content-Type': 'application/json'
+              },
+          }
+      );
       const { timestamp, signature, apiKey, cloudName } = signatureResponse.data;
       const formData = new FormData();
       formData.append("file", audioFile);
@@ -44,6 +51,12 @@ const UploadAudio = () => {
             );
             setUploadProgress(percentCompleted);
           },
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
         }
       );
       setAudioUrl(uploadResponse.data.secure_url);
@@ -54,7 +67,14 @@ const UploadAudio = () => {
         audioUrl: uploadResponse.data.secure_url,
         userID,
         userName
-      });
+      },
+    {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json'
+          },
+      }
+    );
       setUploadStatus("✅ Upload successful!");
       setUploadProgress(100);
       await appendSongs();
