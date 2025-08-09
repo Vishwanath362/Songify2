@@ -224,7 +224,7 @@ export const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 shadow-lg transform ${
+              className={`w-full py-4 font-semibold rounded-xl transition-all duration-300 shadow-lg transform cursor-pointer ${
                 loading 
                   ? 'bg-gray-600 cursor-not-allowed opacity-50' 
                   : 'bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 hover:shadow-green-500/25 hover:scale-[1.02]'
