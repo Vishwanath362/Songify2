@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const dotenv = require("dotenv");
-const connectDB = require("./Config/db");
+const connectDB = require("./config/db");
 
 dotenv.config();
 connectDB();
@@ -26,8 +26,8 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
-const userRoutes = require("./Routes/userRoutes");
-const songRoutes = require("./Routes/songRoutes");
+const userRoutes = require("./routes/userRoutes");
+const songRoutes = require("./routes/songRoutes");
 
 app.use("/api",userRoutes);
 app.use("/api",songRoutes);

@@ -1,5 +1,5 @@
-const Song = require("../Models/song.js");
-const User = require("../Models/users.js");
+const Song = require("../models/song.js");
+const User = require("../models/users.js");
 const cloudinary = require("cloudinary").v2;
 
 const getAudioSignature = async (req, res) => {

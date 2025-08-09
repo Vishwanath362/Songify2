@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const songControllers = require("../Controllers/songController.js");
-const authenticateToken = require("../Middleware/authenticateToken.js");
-const { upload } = require("../Middleware/multer.js");
+const songControllers = require("../controllers/songController.js");
+const authenticateToken = require("../middleware/authenticateToken.js");
+const { upload } = require("../middleware/multer.js");
 
 router.post("/get-audio-signature", authenticateToken, songControllers.getAudioSignature);
 router.post("/save-song", authenticateToken, songControllers.saveSong);
