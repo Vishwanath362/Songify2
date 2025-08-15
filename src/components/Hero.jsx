@@ -244,13 +244,13 @@ const Hero = () => {
     // Audio reactive animation trigger
     const triggerAudioReactive = () => {
         gsap.to(musicBarsRef.current, {
-            scaleY: () => gsap.utils.random(0.5, 2),
+            scaleY: () => gsap.utils.random(0.2, 2),
             duration: 0.1,
             ease: "none",
             stagger: {
                 each: 0.02,
                 repeat: 20,
-                repeatRefresh: true
+                repeatRefresh: false
             }
         });
     };
@@ -288,7 +288,7 @@ const Hero = () => {
                         </button>
                         
                         <button 
-                            onClick={triggerAudioReactive}
+                            // onClick={triggerAudioReactive}
                             className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-green-500 rounded-full text-base sm:text-lg font-semibold text-green-400 hover:bg-green-500/10 transition-all duration-300 transform-gpu w-full sm:w-auto"
                         >
                             <Play className="w-4 h-4 sm:w-5 sm:h-5" />
