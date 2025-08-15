@@ -102,7 +102,7 @@ const uploadAudio = async (req, res) => {
 
 const songs = async (req, res) => {
   try {
-    const songs = await Song.find();
+    const songs = await Song.find().sort({playCount:-1});
     return res.status(200).send(songs);
 
   } catch (err) {

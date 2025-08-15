@@ -50,7 +50,7 @@ export const AuthContextProvider = ({ children }) => {
             }
         };
         fetchSongs();
-    }, [])
+    }, [token])
 
     const handleLogin = (t) => {
         // console.log("handleLogin is working");
