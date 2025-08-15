@@ -2,13 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { gsap } from "gsap";
 import { MoveRight, Play, Music, Headphones } from "lucide-react"
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuthContext } from "../authentication/Auth";
 
 const Hero = () => {
     const navigate = useNavigate();
     const { token, setToken, userName, handleLogout } = useAuthContext();
-    
+
     // Refs for GSAP animations
     const heroRef = useRef(null);
     const titleRef = useRef(null);
@@ -23,7 +23,7 @@ const Hero = () => {
         console.log("clicked");
         navigate("/signup");
     };
-   
+
     const musicImages = [
         "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=400&fit=crop",
         "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=200&h=400&fit=crop",
@@ -153,10 +153,10 @@ const Hero = () => {
             note.className = 'absolute text-green-400 text-2xl opacity-60 pointer-events-none z-0';
             note.style.left = Math.random() * 100 + '%';
             note.style.top = Math.random() * 100 + '%';
-            
+
             heroRef.current.appendChild(note);
 
-            gsap.fromTo(note, 
+            gsap.fromTo(note,
                 {
                     opacity: 0,
                     scale: 0.5,
@@ -259,7 +259,7 @@ const Hero = () => {
         <div ref={heroRef} className="bg-gradient-to-br from-gray-950 via-gray-900 to-green-900 min-h-screen flex flex-col relative overflow-hidden">
             {/* Container */}
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
-                
+
                 {/* Left Content */}
                 <div className="flex-1 max-w-full lg:max-w-2xl z-20 text-center lg:text-left">
                     <div className="mb-6 sm:mb-8">
@@ -267,11 +267,11 @@ const Hero = () => {
                             <Music className="w-6 h-6 sm:w-8 sm:h-8 text-green-400" />
                             <span className="text-green-400 font-semibold text-base sm:text-lg">SONGIFY</span>
                         </div>
-                        
+
                         <h1 ref={titleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-4 sm:mb-6 bg-gradient-to-r from-white via-green-200 to-emerald-400 bg-clip-text text-transparent leading-tight">
                             Your Personal Music Stage
                         </h1>
-                        
+
                         <p ref={subtitleRef} className="text-lg sm:text-xl lg:text-2xl text-gray-300 mb-6 sm:mb-8 leading-relaxed max-w-full lg:max-w-lg mx-auto lg:mx-0">
                             Upload tracks, build playlists, and explore what others are creating — all in one powerful, free platform made for creators.
                         </p>
@@ -279,21 +279,22 @@ const Hero = () => {
 
                     {/* Buttons */}
                     <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 w-full sm:w-auto justify-center lg:justify-start">
-                        <button 
-                            onClick={handleLogin} 
+                        <button
+                            onClick={handleLogin}
                             className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-full text-base sm:text-lg font-semibold text-white shadow-lg transition-all duration-300 transform-gpu w-full sm:w-auto"
                         >
                             Get Started Free
                             <MoveRight className="w-4 h-4 sm:w-5 sm:h-5" />
                         </button>
-                        
-                        <button 
-                            // onClick={triggerAudioReactive}
-                            className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-green-500 rounded-full text-base sm:text-lg font-semibold text-green-400 hover:bg-green-500/10 transition-all duration-300 transform-gpu w-full sm:w-auto"
-                        >
-                            <Play className="w-4 h-4 sm:w-5 sm:h-5" />
-                            Watch Demo
-                        </button>
+
+                        <Link to="https://www.linkedin.com/posts/vishwanath-singh-7bb593298_just-launched-songify-a-place-to-share-activity-7356014255235633152-Q7pI?utm_source=share&utm_medium=member_ios&rcm=ACoAAEf9Lb8B3SG2V3qkyKatjFafVMtaCP37mWI">
+                            <button
+                                // onClick={triggerAudioReactive}
+                                className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-green-500 rounded-full text-base sm:text-lg font-semibold text-green-400 hover:bg-green-500/10 transition-all duration-300 transform-gpu w-full sm:w-auto"
+                            >
+                                <Play className="w-4 h-4 sm:w-5 sm:h-5" />
+                                Watch Demo
+                            </button></Link>
                     </div>
 
                     {/* Stats */}
@@ -321,7 +322,7 @@ const Hero = () => {
                                 key={index}
                                 ref={el => musicBarsRef.current[index] = el}
                                 className={`${heights[index]} w-8 sm:w-10 md:w-12 lg:w-14 xl:w-16 rounded-t-full rounded-b-full bg-cover bg-center shadow-xl cursor-pointer transform-gpu`}
-                                style={{ 
+                                style={{
                                     backgroundImage: `url('${image}')`,
                                     transformOrigin: 'bottom center'
                                 }}
@@ -337,7 +338,7 @@ const Hero = () => {
                             />
                         ))}
                     </div>
-                    
+
                     {/* Floating Headphones */}
                     <div ref={headphonesRef} className="absolute -top-2 sm:-top-4 -right-2 sm:-right-4 bg-green-500 p-2 sm:p-3 lg:p-4 rounded-full shadow-lg transform-gpu">
                         <Headphones className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
@@ -348,7 +349,7 @@ const Hero = () => {
             {/* Bottom Wave */}
             <div className="absolute bottom-0 left-0 right-0 z-10">
                 <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-12 sm:h-16 lg:h-20">
-                    <path d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,58.7C1248,64,1344,64,1392,64L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="url(#gradient)" fillOpacity="0.1"/>
+                    <path d="M0,32L48,37.3C96,43,192,53,288,58.7C384,64,480,64,576,58.7C672,53,768,43,864,42.7C960,43,1056,53,1152,58.7C1248,64,1344,64,1392,64L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="url(#gradient)" fillOpacity="0.1" />
                     <defs>
                         <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor="#10b981" />
