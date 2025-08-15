@@ -8,8 +8,8 @@ router.post("/get-audio-signature", authenticateToken, songControllers.getAudioS
 router.post("/save-song", authenticateToken, songControllers.saveSong);
 router.post("/upload", upload.single("my-audio"), songControllers.uploadAudio);
 router.get("/songs", authenticateToken, songControllers.songs);
-router.post("/addLike", authenticateToken, songControllers.addLike);
-router.post("/addPlayCount", authenticateToken, songControllers.addPlayCount);
+router.patch("/addLike", authenticateToken, songControllers.addLike);
+router.patch("/addPlayCount", authenticateToken, songControllers.addPlayCount);
 router.get("/likedSongs", authenticateToken, songControllers.likedSongs);
 
 module.exports = router;

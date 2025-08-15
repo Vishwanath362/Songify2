@@ -109,7 +109,7 @@ export const AuthContextProvider = ({ children }) => {
                 return;
             }
 
-            const res = await axios.post(
+            const res = await axios.patch(
                 `${API_BASE_URL}/api/addLike`,
                 { songId },
                 {
@@ -135,7 +135,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const addPlayCount = async(songId)=>{
         try {
-            const res = await axios.post(
+            const res = await axios.patch(
                 `${API_BASE_URL}/api/addPlayCount`,
                 { songId },
                 {
