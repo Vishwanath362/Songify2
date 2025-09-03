@@ -11,5 +11,6 @@ router.get("/songs", authenticateToken, songControllers.songs);
 router.patch("/addLike", authenticateToken, songControllers.addLike);
 router.patch("/addPlayCount", authenticateToken, songControllers.addPlayCount);
 router.get("/likedSongs", authenticateToken, songControllers.likedSongs);
+router.get("/search", authenticateToken, songControllers.getSearchSongs);
 
 module.exports = router;

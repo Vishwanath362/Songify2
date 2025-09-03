@@ -3,9 +3,9 @@ import { useAuthContext } from "../authentication/Auth";
 import UploadAudio from "./uploadAudio";
 import { Outlet, useNavigate } from "react-router-dom";
 import Library from "./Library";
-
+import SearchSongs from "./SearchSongs";
 export const Dashboard = () => {
-  const { token } = useAuthContext();
+  const { token ,searchedSongs,searchInput, handleSearch} = useAuthContext();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +21,8 @@ export const Dashboard = () => {
       </aside>
       <main className="flex flex-col w-full max-w-full px-0 md:px-4 py-2 gap-6">
         <div className="w-full max-w-full">
-          <Outlet />
+          {searchedSongs?(<SearchSongs/>):( <Outlet />)}
+          {/* <Outlet /> */}
         </div>
         <div className="w-full max-w-full ">
           <UploadAudio />

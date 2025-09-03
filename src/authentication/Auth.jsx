@@ -1,13 +1,14 @@
 import { useContext, useState, createContext, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
-import { set } from "mongoose";
+
+
 
 // Environment variable with fallback - automatically detect local vs production
 const isLocalDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-const API_BASE_URL = isLocalDevelopment 
-  ? 'http://localhost:3000' 
-  : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
+const API_BASE_URL = isLocalDevelopment
+    ? 'http://localhost:3000'
+    : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
 
 const AuthContext = createContext();
 
@@ -16,7 +17,9 @@ export const AuthContextProvider = ({ children }) => {
     const [userName, setUserName] = useState(null);
     const [userID, setUserID] = useState(null);
     const [songsData, setSongs] = useState([]);
-
+    const [searchInput, setSearchInput] = useState("");
+    const [searchedSongs, setSearchedSongs] = useState(null);
+    
     useEffect(() => {
         const savedToken = localStorage.getItem("token");
         if (savedToken) {
@@ -36,13 +39,13 @@ export const AuthContextProvider = ({ children }) => {
     useEffect(() => {
         const fetchSongs = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/songs`,{
+                const response = await axios.get(`${API_BASE_URL}/api/songs`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     },
                 });
-               
+
                 setSongs(response.data);
             }
             catch (err) {
@@ -83,20 +86,20 @@ export const AuthContextProvider = ({ children }) => {
     }
     const addLike = async (songId) => {
         try {
-             
+
             if (!token) {
                 console.error("❌ No token available - user might not be logged in");
                 return;
             }
 
-            // Check if token is expired
+
             try {
                 const decoded = jwtDecode(token);
                 const now = Date.now() / 1000;
-                console.log("- Token expires at:", new Date(decoded.exp * 1000));
-                console.log("- Current time:", new Date());
-                console.log("- Token expired:", decoded.exp < now ? "❌ YES" : "✅ NO");
-                
+                // console.log("- Token expires at:", new Date(decoded.exp * 1000));
+                // console.log("- Current time:", new Date());
+                // console.log("- Token expired:", decoded.exp < now ? "❌ YES" : "✅ NO");
+
                 if (decoded.exp < now) {
                     console.error("❌ Token is expired! Please login again.");
                     // Clear expired token
@@ -122,18 +125,18 @@ export const AuthContextProvider = ({ children }) => {
 
             console.log("✅ Song liked successfully:", res.data);
         } catch (error) {
-            console.error("❌ Error liking song:");
-            console.error("- Status:", error.response?.status);
-            console.error("- Message:", error.response?.data?.message || error.message);
-            console.error("- Full error:", error.response?.data || error.message);
-            
+            // console.error("❌ Error liking song:");
+            // console.error("- Status:", error.response?.status);
+            // console.error("- Message:", error.response?.data?.message || error.message);
+            // console.error("- Full error:", error.response?.data || error.message);
+
             if (error.response?.status === 403) {
                 console.error("🔑 Token might be expired or invalid. Try logging in again.");
             }
         }
     };
 
-    const addPlayCount = async(songId)=>{
+    const addPlayCount = async (songId) => {
         try {
             const res = await axios.patch(
                 `${API_BASE_URL}/api/addPlayCount`,
@@ -145,7 +148,7 @@ export const AuthContextProvider = ({ children }) => {
                 }
             );
         } catch (error) {
-            console.log(error+" ese hee")
+            console.log(error + " ese hee")
         }
     }
 
@@ -165,10 +168,36 @@ export const AuthContextProvider = ({ children }) => {
             return [];
         }
     }
+    const handleSearch = async (query) => {
+        if (!token) {
+            navigate('/')
+        }
+        if (query === ""){
+            setSearchInput(query);
+            setSearchedSongs(null);
+            return;
+        }
+        setSearchInput(query);
+        
+        try {
+            const response = await axios.get(
+                `${API_BASE_URL}/api/search?q=${query}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setSearchedSongs(response.data);
+        } catch (error) {
+            console.log("error in handlesearch",error);
+        }
+
+    }
     const likedSongs = (songsData || [])
-    .filter(song => song.visibility === 'public' && song.likedBy.includes(userID));
+        .filter(song => song.visibility === 'public' && song.likedBy.includes(userID));
     return (
-        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs,likedSongs }}>
+        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs, likedSongs, searchInput, handleSearch,searchedSongs }}>
             {children}
         </AuthContext.Provider>
     );

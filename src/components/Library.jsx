@@ -5,13 +5,13 @@ import heart2 from "../assets/heart2.png"
 import { Link } from 'react-router-dom';
 
 const Library = () => {
-  const { songsData ,likedSongs} = useAuthContext();
+  const { songsData ,likedSongs,searchInput, handleSearch} = useAuthContext();
 
   return (
     <div className="flex flex-col w-full max-w-xl mx-auto ">
       <h4 className="text-xl sm:text-2xl p-2 mt-4 font-bold">Your Library</h4>
       <div className="mt-6 flex flex-col gap-5">
-        <Link to="/dashboard/likedSongs" className="focus:outline-none">
+        <Link to="/dashboard/likedSongs" onClick={()=>handleSearch("")} className="focus:outline-none">
           <div className="flex items-center gap-4 bg-gray-700 hover:bg-gray-600 transition rounded-2xl px-3 py-3 shadow-md">
             <img className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover flex-shrink-0" src={heart2} alt="" />
             <div className="flex flex-col">
@@ -20,7 +20,7 @@ const Library = () => {
             </div>
           </div>
         </Link>
-        <Link to="/Dashboard" className="focus:outline-none">
+        <Link to="/Dashboard" onClick={()=>handleSearch("")}  className="focus:outline-none">
           <div className="flex items-center gap-4 bg-gray-700 hover:bg-gray-600 transition rounded-2xl px-3 py-3 shadow-md">
             <img className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover flex-shrink-0" src={songImage1} alt="" />
             <div className="flex flex-col">

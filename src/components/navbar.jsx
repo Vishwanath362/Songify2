@@ -1,16 +1,23 @@
 import { Music, Search, Menu as MenuIcon, X as XIcon } from "lucide-react";
 import React, { useState } from "react";
 import { useAuthContext } from "../authentication/Auth";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+
   const [clickedInput, setInput] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { token, userName, handleLogout } = useAuthContext();
-  const userLogo = userName ? userName[0] : "";
 
-  // navLinks for mapping
+  const { token, userName, handleLogout, searchInput, handleSearch } = useAuthContext();
+  const userLogo = userName ? userName[0] : "";
+  const [searchQuery, setSearchQuery] = useState(searchInput);
+
+
+
+  const handleChange = (e) => {
+    setSearchQuery(e);
+  }
   const navLinks = [
     { name: "Music", to: "/dashboard" },
     { name: "Your Uploads", to: "/dashboard/yourUploads" },
@@ -24,7 +31,7 @@ export const Navbar = () => {
   return (
     <header className="w-full bg-white shadow z-20">
       <nav className="container mx-auto flex items-center justify-between py-2 px-3 md:px-6 h-16 md:h-20">
-       
+
         <div className="flex items-center gap-2">
           <Music size={32} />
           <Link to="/" className="text-2xl font-bold text-gray-800 hover:text-black">
@@ -32,7 +39,7 @@ export const Navbar = () => {
           </Link>
         </div>
 
-       
+
         <ul className="hidden md:flex items-center gap-6 text-base font-semibold ml-10">
           {navLinks.map((link) => (
             <li key={link.name}>
@@ -43,25 +50,36 @@ export const Navbar = () => {
           ))}
         </ul>
 
-       
+
         <div
-          className={`hidden md:flex items-center h-12 p-1 bg-gray-500 w-[320px] lg:w-[420px] rounded-full border-2 transition ${
-            clickedInput ? "border-4 border-black" : "border-transparent"
-          }`}
+          className={`hidden md:flex items-center h-12 p-1 bg-gray-500 w-[320px] lg:w-[420px] rounded-full border-2 transition ${clickedInput ? "border-4 border-black" : "border-transparent"
+            }`}
         >
           <div className="pl-2">
             <Search color="white" />
           </div>
           <input
             type="text"
+            value={searchInput}
             placeholder="What do you want to listen to?"
             className="placeholder-gray-400 border-none outline-none text-base bg-transparent w-full pl-3"
             onFocus={() => setInput(true)}
             onBlur={() => setInput(false)}
+            onChange={e => {
+              handleSearch(e.target.value);
+              handleChange(e.target.value);
+            }}
           />
+          {searchQuery ? (<button onClick={() => {
+            handleSearch("");
+            handleChange("")
+          }}
+            className="p-2">
+            <XIcon />
+          </button>) : (null)}
         </div>
 
-      
+
         <ul className="hidden md:flex items-center gap-6 font-semibold ml-6">
           {actionLinks.map(link => (
             <li key={link.name}>
@@ -109,7 +127,7 @@ export const Navbar = () => {
           )}
         </ul>
 
-      
+
         <button
           className="inline-flex md:hidden items-center p-2 focus:outline-none"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -118,7 +136,7 @@ export const Navbar = () => {
           {menuOpen ? <XIcon size={28} /> : <MenuIcon size={28} />}
         </button>
       </nav>
-      
+
       {menuOpen && (
         <div className="md:hidden bg-white shadow-lg px-6 py-4 z-30 absolute left-0 top-16 w-full">
           <ul className="flex flex-col gap-3">
@@ -133,23 +151,35 @@ export const Navbar = () => {
                 </Link>
               </li>
             ))}
-           
+
             <li className="my-2">
               <div
-                className={`flex items-center h-11 bg-gray-500 rounded-full border-2 ${
-                  clickedInput ? "border-black border-4" : "border-transparent"
-                }`}
+                className={`flex items-center h-11 bg-gray-500 rounded-full border-2 ${clickedInput ? "border-black border-4" : "border-transparent"
+                  }`}
               >
                 <div className="pl-2">
                   <Search color="white" size={20} />
                 </div>
                 <input
                   type="text"
+                  value={searchInput}
                   placeholder="What do you want to listen to?"
                   className="placeholder-gray-300 border-none outline-none text-base bg-transparent w-full px-2"
                   onFocus={() => setInput(true)}
                   onBlur={() => setInput(false)}
+                  onChange={e => {
+                    handleSearch(e.target.value);
+                    handleChange(e.target.value);
+                  }}
                 />
+                {searchQuery ? (<button onClick={() => {
+                  handleSearch("");
+                  handleChange("")
+                }}
+                  className="p-2">
+                  <XIcon />
+                </button>) : (null)}
+                
               </div>
             </li>
             {actionLinks.map(link => (
@@ -175,7 +205,7 @@ export const Navbar = () => {
                 </li>
                 <li>
                   <button
-                    onClick={() => {handleLogout(); setMenuOpen(false);}}
+                    onClick={() => { handleLogout(); setMenuOpen(false); }}
                     className="w-full h-10 rounded-full bg-red-400 text-white mt-2 hover:bg-red-500 transition"
                   >
                     Logout

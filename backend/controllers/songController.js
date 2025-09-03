@@ -228,6 +228,20 @@ const likedSongs = async (req, res) => {
   }
 };
 
+const getSearchSongs = async (req, res) => {
+  try {
+    const query = req.query.q || ""; 
+    const songs = await Song.find({
+      title: { $regex: query, $options: "i" }, 
+    });
+
+    res.status(200).json(songs);
+  } catch (error) {
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Server error while searching" });
+  }
+};
+
 module.exports = {
   getAudioSignature,
   saveSong,
@@ -235,5 +249,6 @@ module.exports = {
   songs,
   addLike,
   addPlayCount,
-  likedSongs
+  likedSongs,
+  getSearchSongs
 };

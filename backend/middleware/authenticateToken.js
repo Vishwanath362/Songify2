@@ -28,7 +28,7 @@ const authenticateToken = (req, res, next) => {
       }
     }
     
-    console.log("✅ Token verified successfully for user:", user.name);
+    // console.log("✅ Token verified successfully for user:", user.name);
     req.user = user; 
     next();
   });

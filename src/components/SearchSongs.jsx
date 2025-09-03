@@ -4,7 +4,7 @@ import songImage1 from '../assets/songCard1.png'
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const LikedSongs = () => {
+const SearchSongs = () => {
   const navigate = useNavigate();
   const {
     songsData,
@@ -13,18 +13,21 @@ const LikedSongs = () => {
     getLikedSongs,
     userID,
     addLike,
-    addPlayCount,searchInput, handleSearch
+    addPlayCount,
+    searchedSongs,searchInput, handleSearch
   } = useAuthContext();
   const [durations, setDurations] = useState({});
-  
+
   const handleLike = async (songId) => {
     await addLike(songId);
     await appendSongs();
+    await handleSearch(searchInput)
   };
 
   const handlePlayCount = async (songId) => {
     await addPlayCount(songId);
     await appendSongs();
+    await handleSearch(searchInput)
   };
 
   function formatDuration(sec) {
@@ -40,19 +43,20 @@ const LikedSongs = () => {
     }
   }, [token, navigate]);
 
-  const likedSongsList = (songsData || [])
-    .filter(song => song.visibility === 'public' && song.likedBy.includes(userID));
+ 
+    const searchedSongsList = (searchedSongs || [])
+    .filter(song => song.visibility === 'public' );
 
   return (
     <div className="h-auto w-full bg-gradient-to-br from-gray-900 to-gray-800 p-3 sm:p-6 ml-0 md:ml-3 rounded-xl md:rounded-2xl shadow-xl border border-gray-700/30">
       <div className="flex flex-col w-full">
         <div className="mb-8">
-          <h4 className="text-2xl md:text-3xl font-bold text-white mb-2">Liked Songs</h4>
+          <h4 className="text-2xl md:text-3xl font-bold text-white mb-2">Matching Songs</h4>
           <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
         </div>
-        {likedSongsList.length > 0 ? (
+        {searchedSongsList.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {likedSongsList.map((song, idx) => (
+            {searchedSongsList.map((song, idx) => (
               <div
                 key={song._id}
                 className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg md:rounded-xl p-4 md:p-5 flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 md:hover:-translate-y-2 border border-gray-700/50 group relative overflow-hidden"
@@ -125,9 +129,9 @@ const LikedSongs = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
               </svg>
             </div>
-            <h2 className="text-xl md:text-2xl font-bold text-gray-400 mb-1 md:mb-2">No Liked Songs</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-gray-400 mb-1 md:mb-2">No Such Songs</h2>
             <p className="text-gray-500 max-w-xs md:max-w-md text-sm md:text-base">
-              You haven't liked any songs yet. Start browsing and hit the heart icon to save your favourites!
+              No Matching Songs found with this query!!
             </p>
           </div>
         )}
@@ -136,4 +140,4 @@ const LikedSongs = () => {
   );
 };
 
-export default LikedSongs;
+export default SearchSongs;
