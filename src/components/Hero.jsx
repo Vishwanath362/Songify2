@@ -258,7 +258,7 @@ const Hero = () => {
     return (
         <div ref={heroRef} className="bg-gradient-to-br from-gray-950 via-gray-900 to-green-900 min-h-screen flex flex-col relative overflow-hidden">
             {/* Container */}
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
+            <div className=" pb-30 sm:pb-0 container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 flex-1 flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-12 relative z-10">
 
                 {/* Left Content */}
                 <div className="flex-1 max-w-full lg:max-w-2xl z-20 text-center lg:text-left">
@@ -316,7 +316,7 @@ const Hero = () => {
 
                 {/* Right Visual */}
                 <div className="flex-1 flex justify-center items-center relative mt-8 lg:mt-0 w-full">
-                    <div className="flex items-center justify-center gap-1 sm:gap-2 lg:gap-3 w-full max-w-md lg:max-w-none">
+                    <div className="flex  items-center justify-center gap-1 sm:gap-2 lg:gap-3 w-full max-w-md lg:max-w-none">
                         {musicImages.map((image, index) => (
                             <div
                                 key={index}
