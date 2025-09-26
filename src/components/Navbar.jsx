@@ -18,15 +18,18 @@ export const Navbar = () => {
   const handleChange = (e) => {
     setSearchQuery(e);
   }
+  const hasAcess = token? true: false;
   const navLinks = [
-    { name: "Music", to: "/dashboard" },
-    { name: "Your Uploads", to: "/dashboard/yourUploads" },
+    { name: "Music", to: "/dashboard" , fixedAccess:false },
+    { name: "Your Uploads", to: "/dashboard/yourUploads" , fixedAccess:false},
   ];
 
   const actionLinks = [
-    { name: "Browse", to: "/dashboard" },
-    { name: "About Us", to: "/about" },
+    { name: "Browse", to: "/dashboard", fixedAccess:false },
+    { name: "About Us", to: "/about", fixedAccess:true },
   ];
+
+
 
   return (
     <header className="w-full bg-white shadow z-20">
@@ -43,7 +46,7 @@ export const Navbar = () => {
         <ul className="hidden md:flex items-center gap-6 text-base font-semibold ml-10">
           {navLinks.map((link) => (
             <li key={link.name}>
-              <Link to={link.to} className="px-2 py-1 text-gray-700 hover:text-black transition">
+              <Link to={(hasAcess || link.fixedAccess)?link.to:'/login'} className="px-2 py-1 text-gray-700 hover:text-black transition">
                 {link.name}
               </Link>
             </li>
@@ -83,7 +86,7 @@ export const Navbar = () => {
         <ul className="hidden md:flex items-center gap-6 font-semibold ml-6">
           {actionLinks.map(link => (
             <li key={link.name}>
-              <Link to={link.to} className="text-gray-700 px-2 py-1 hover:text-black transition">
+              <Link to={(hasAcess || link.fixedAccess)?link.to:'/login'} className="text-gray-700 px-2 py-1 hover:text-black transition">
                 {link.name}
               </Link>
             </li>
@@ -143,7 +146,7 @@ export const Navbar = () => {
             {navLinks.map(link => (
               <li key={link.name}>
                 <Link
-                  to={link.to}
+                  to={(hasAcess || link.fixedAccess)?link.to:'/login'}
                   className="text-lg text-gray-700 block py-2 px-2 rounded hover:bg-gray-100"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -185,7 +188,7 @@ export const Navbar = () => {
             {actionLinks.map(link => (
               <li key={link.name}>
                 <Link
-                  to={link.to}
+                  to={(hasAcess || link.fixedAccess)?link.to:'/login'}
                   className="text-lg text-gray-700 block py-2 px-2 rounded hover:bg-gray-100"
                   onClick={() => setMenuOpen(false)}
                 >

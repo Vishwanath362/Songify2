@@ -1,5 +1,4 @@
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { gsap } from "gsap";
 import { MoveRight, Play, Music, Headphones } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom";

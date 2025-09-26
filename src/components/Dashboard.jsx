@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useAuthContext } from "../authentication/Auth";
-import UploadAudio from "./uploadAudio";
+import UploadAudio from "./UploadAudio"
 import { Outlet, useNavigate } from "react-router-dom";
 import Library from "./Library";
 import SearchSongs from "./SearchSongs";
