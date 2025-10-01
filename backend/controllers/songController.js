@@ -28,12 +28,12 @@ const getAudioSignature = async (req, res) => {
     });
   } catch (error) {
     console.error("Error generating signature:", error);
-    res.status(500).json({ error: "Failed to generate signature", details: error.message });
+    return res.status(500).json({ error: "Failed to generate signature", details: error.message });
   }
 };
 
 
-const saveSong =  async (req, res) => {
+const saveSong = async (req, res) => {
   try {
     const { title, genre, visibility, audioUrl, userID, userName } = req.body;
 
@@ -63,13 +63,13 @@ const saveSong =  async (req, res) => {
     });
   } catch (error) {
     console.error("Error saving song:", error);
-    res.status(500).json({ error: "Failed to save song" });
+    return res.status(500).json({ error: "Failed to save song" });
   }
 };
 
 const uploadAudio = async (req, res) => {
   try {
-   
+
     const uploadResult = await cloudinary.uploader.upload(
       req.file.path, {
       resource_type: "video",
@@ -86,14 +86,14 @@ const uploadAudio = async (req, res) => {
 
     // console.log("Upload successful:", uploadResult);
 
-    res.json({
+    return res.json({
       success: true,
       url: uploadResult.secure_url,
       songId: song._id
     });
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ error: "Upload failed" });
+    return res.status(500).json({ error: "Upload failed" });
   }
 };
 
@@ -102,7 +102,7 @@ const uploadAudio = async (req, res) => {
 
 const songs = async (req, res) => {
   try {
-    const songs = await Song.find().sort({playCount:-1});
+    const songs = await Song.find().sort({ playCount: -1 });
     return res.status(200).send(songs);
 
   } catch (err) {
@@ -137,43 +137,43 @@ const addLike = async (req, res) => {
     const isLiked = song.likedBy.includes(userId);
 
     if (!isLiked) {
-     
+
       song.likedBy.push(userId);
       song.likeCount = song.likedBy.length;
       await song.save();
 
-     
+
       if (!user.likedSongs.includes(songId)) {
         user.likedSongs.push(songId);
         await user.save();
       }
 
-      
-      res.status(200).json({ 
-        message: "Song liked successfully", 
+
+      return res.status(200).json({
+        message: "Song liked successfully",
         likeCount: song.likeCount,
         action: "liked"
       });
     } else {
-      
+
       song.likedBy = song.likedBy.filter(id => !id.equals(userId));
       song.likeCount = song.likedBy.length;
       await song.save();
 
-    
+
       user.likedSongs = user.likedSongs.filter(id => !id.equals(songId));
       await user.save();
 
-      
-      res.status(200).json({ 
-        message: "Song unliked successfully", 
+
+      res.status(200).json({
+        message: "Song unliked successfully",
         likeCount: song.likeCount,
         action: "unliked"
       });
     }
   } catch (err) {
     console.error("Error in addLike endpoint:", err);
-    res.status(500).json({ message: "Internal server error", error: err.message });
+    return res.status(500).json({ message: "Internal server error", error: err.message });
   }
 };
 
@@ -189,21 +189,21 @@ const addPlayCount = async (req, res) => {
     const song = await Song.findById(songId);
     const user = await User.findById(userId);
 
-    if(!song || !user) {
+    if (!song || !user) {
       console.log("song or user error");
-      
+
     }
     await Song.findByIdAndUpdate(songId,
-      {$inc:{playCount:1}})
+      { $inc: { playCount: 1 } })
 
-    res.status(200).json({ 
-        message: "Playcount inceased successfully"
-       
-      });
-  } 
+    return res.status(200).json({
+      message: "Playcount inceased successfully"
+
+    });
+  }
   catch (err) {
     console.error("Error in addPlaycount endpoint:", err);
-    res.status(500).json({ message: "Internal server error", error: err.message });
+    return res.status(500).json({ message: "Internal server error", error: err.message });
   }
 };
 
@@ -214,31 +214,31 @@ const likedSongs = async (req, res) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId).populate('likedSongs');
-    
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json({ 
+    return res.status(200).json({
       likedSongs: user.likedSongs || []
     });
   } catch (err) {
     console.error("Error fetching liked songs:", err);
-    res.status(500).json({ message: "Internal server error", error: err.message });
+    return res.status(500).json({ message: "Internal server error", error: err.message });
   }
 };
 
 const getSearchSongs = async (req, res) => {
   try {
-    const query = req.query.q || ""; 
+    const query = req.query.q || "";
     const songs = await Song.find({
-      title: { $regex: query, $options: "i" }, 
+      title: { $regex: query, $options: "i" },
     });
 
     res.status(200).json(songs);
   } catch (error) {
     console.error("Search error:", error);
-    res.status(500).json({ message: "Server error while searching" });
+    return res.status(500).json({ message: "Server error while searching" });
   }
 };
 

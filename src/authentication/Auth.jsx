@@ -37,6 +37,7 @@ export const AuthContextProvider = ({ children }) => {
     }, [token]);
 
     useEffect(() => {
+        if(!token) return;
         const fetchSongs = async () => {
             try {
                 const response = await axios.get(`${API_BASE_URL}/api/songs`, {
@@ -197,7 +198,7 @@ export const AuthContextProvider = ({ children }) => {
     const likedSongs = (songsData || [])
         .filter(song => song.visibility === 'public' && song.likedBy.includes(userID));
     return (
-        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs, likedSongs, searchInput, handleSearch,searchedSongs }}>
+        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs, likedSongs, searchInput, handleSearch, searchedSongs }}>
             {children}
         </AuthContext.Provider>
     );
