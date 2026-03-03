@@ -3,17 +3,20 @@ import { useAuthContext } from "../authentication/Auth";
 import songImage1 from '../assets/songCard1.png'
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const YourUploads = () => {
   const navigate = useNavigate();
   const {
-    songsData,
     appendSongs,
     token,
     userID,
     addLike,
-    addPlayCount
+    addPlayCount,
+    API_BASE_URL,
+    yourSongsData
   } = useAuthContext();
+
   const [durations, setDurations] = useState({});
 
   const handleLike = async (songId) => {
@@ -39,7 +42,9 @@ const YourUploads = () => {
     }
   }, [token, navigate]);
 
-  const YourSongList = (songsData || []).filter(song => song.uploadedBy === userID);
+  //  const YourSongList = (songsData || []).filter(song => song.uploadedBy === userID);
+  // let yourSongsData = [];
+  
 
   return (
     <div className="h-auto w-full bg-gradient-to-br from-gray-950 via-gray-900 to-green-900 p-3 sm:p-6 ml-0 md:ml-3 rounded-xl md:rounded-2xl shadow-xl border border-gray-700/30">
@@ -48,9 +53,9 @@ const YourUploads = () => {
           <h4 className="text-2xl md:text-3xl font-bold text-white mb-2">Your Songs</h4>
           <div className="w-16 md:w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
         </div>
-        {YourSongList.length > 0 ? (
+        {yourSongsData?.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-            {YourSongList.map((song) => (
+            {yourSongsData.map((song) => (
               <div
                 key={song._id}
                 className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg md:rounded-xl p-4 md:p-5 flex flex-col shadow-lg hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 md:hover:-translate-y-2 border border-gray-700/50 group relative overflow-hidden"

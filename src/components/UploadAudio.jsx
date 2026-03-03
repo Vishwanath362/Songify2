@@ -9,7 +9,7 @@ const API_BASE_URL = isLocalDevelopment
   : (import.meta.env.VITE_API_BASE_URL || process.env.REACT_APP_API_BASE_URL || 'https://songify-v4q3.onrender.com');
 
 const UploadAudio = () => {
-  const { userID, userName, appendSongs,token } = useAuthContext();
+  const { userID, userName, appendSongs,token,updateYourSongs } = useAuthContext();
   const [audioFile, setAudioFile] = useState(null);
   const [audioUrl, setAudioUrl] = useState(null);
   const [uploadStatus, setUploadStatus] = useState("");
@@ -78,8 +78,11 @@ const UploadAudio = () => {
       setUploadStatus("✅ Upload successful!");
       setUploadProgress(100);
       await appendSongs();
+      await updateYourSongs();
     } catch (err) {
       setUploadStatus("❌ Upload failed. Please try again.");
+      console.log(err.message);
+      
       setUploadProgress(0);
     } finally {
       setUploading(false);

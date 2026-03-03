@@ -33,8 +33,7 @@ export const Login = () => {
 
   const handleSubmit = async (e) => {
     console.log("Login form submitted");
-    console.log("API_BASE_URL:", API_BASE_URL);
-    console.log("Form data:", formData);
+   
     
     e.preventDefault();
     setError(null);
@@ -52,7 +51,7 @@ export const Login = () => {
       } catch (healthError) {
         console.log("Backend is cold starting, this may take a moment...");
         setError("Server is starting up, please wait a moment and try again...");
-        setTimeout(() => setError(null), 3000);
+        setTimeout(() => setError(null), 10000);
       }
       
       const response = await axios.post(`${API_BASE_URL}/api/login`, formData, {

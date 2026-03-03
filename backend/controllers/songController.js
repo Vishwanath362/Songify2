@@ -20,7 +20,7 @@ const getAudioSignature = async (req, res) => {
     );
 
 
-    res.json({
+    return res.json({
       timestamp,
       signature,
       apiKey: process.env.CLOUDINARY_API_KEY,
@@ -40,7 +40,7 @@ const saveSong = async (req, res) => {
     if (!title || !genre || !visibility || !audioUrl || !userID) {
       return res.status(400).json({ error: "Missing required fields" });
     }
-    let Visibility = visibility ? 'public' : 'private';
+    let Visibility = visibility;
 
     const song = new Song({
       title,
@@ -56,7 +56,7 @@ const saveSong = async (req, res) => {
 
     await song.save();
 
-    res.json({
+    return res.json({
       success: true,
       message: "Song saved successfully",
       songId: song._id
@@ -100,9 +100,9 @@ const uploadAudio = async (req, res) => {
 
 
 
-const songs = async (req, res) => {
+const getPublicSongs = async (req, res) => {
   try {
-    const songs = await Song.find().sort({ playCount: -1 });
+    const songs = await Song.find({visibility: "public"}).sort({ playCount: -1 });
     return res.status(200).send(songs);
 
   } catch (err) {
@@ -111,6 +111,18 @@ const songs = async (req, res) => {
   }
 };
 
+const getMySongs = async (req, res) => {
+  try {
+    const userID = req.user.id;
+    console.log(userID);
+    const songs = await Song.find({uploadedBy: userID }).sort({ playCount: -1 });
+    return res.status(200).send(songs);
+
+  } catch (err) {
+    console.log(err);
+    return res.status(404).json({ message: "no data" })
+  }
+};
 
 
 
@@ -246,7 +258,8 @@ module.exports = {
   getAudioSignature,
   saveSong,
   uploadAudio,
-  songs,
+  getPublicSongs,
+  getMySongs,
   addLike,
   addPlayCount,
   likedSongs,

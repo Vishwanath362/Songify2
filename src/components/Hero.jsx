@@ -19,8 +19,9 @@ const Hero = () => {
     const musicNotesRef = useRef([]);
 
     const handleLogin = () => {
-        console.log("clicked");
-        navigate("/signup");
+        // console.log("clicked");
+        {!token && navigate("/signup")}
+        {token && navigate("/dashboard")}
     };
 
     const musicImages = [
@@ -280,7 +281,7 @@ const Hero = () => {
                     <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8 w-full sm:w-auto justify-center lg:justify-start">
                         <button
                             onClick={handleLogin}
-                            className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-full text-base sm:text-lg font-semibold text-white shadow-lg transition-all duration-300 transform-gpu w-full sm:w-auto"
+                            className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-green-600 to-green-700 rounded-full text-base sm:text-lg font-semibold text-white shadow-lg transition-all duration-300 transform-gpu w-full sm:w-auto cursor-pointer"
                         >
                             Get Started Free
                             <MoveRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -289,7 +290,7 @@ const Hero = () => {
                         <Link to="https://www.linkedin.com/posts/vishwanath-singh-7bb593298_just-launched-songify-a-place-to-share-activity-7356014255235633152-Q7pI?utm_source=share&utm_medium=member_ios&rcm=ACoAAEf9Lb8B3SG2V3qkyKatjFafVMtaCP37mWI">
                             <button
                                 // onClick={triggerAudioReactive}
-                                className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-green-500 rounded-full text-base sm:text-lg font-semibold text-green-400 hover:bg-green-500/10 transition-all duration-300 transform-gpu w-full sm:w-auto"
+                                className="flex items-center justify-center gap-2 sm:gap-3 px-6 sm:px-8 py-3 sm:py-4 border-2 border-green-500 rounded-full text-base sm:text-lg font-semibold text-green-400 hover:bg-green-500/10 transition-all duration-300 transform-gpu w-full sm:w-auto cursor-pointer"
                             >
                                 <Play className="w-4 h-4 sm:w-5 sm:h-5" />
                                 Watch Demo

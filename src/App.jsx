@@ -29,11 +29,11 @@ function App() {
               <Footer />
             </>
           } />
+          
           <Route path='/signup' element={<Signup />} />
-          <Route path='/login' element={<Login />}></Route>
-          <Route path='/about' element={<><Navbar /><AboutUs /></>}></Route>
+          <Route path='/login' element={<Login />}/>
+          <Route path='/about' element={<><Navbar /><AboutUs /></>}/>
 
-       
           <Route path='/dashboard' element={<>
             <Navbar />
             <Dashboard />

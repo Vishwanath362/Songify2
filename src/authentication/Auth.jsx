@@ -19,7 +19,8 @@ export const AuthContextProvider = ({ children }) => {
     const [songsData, setSongs] = useState([]);
     const [searchInput, setSearchInput] = useState("");
     const [searchedSongs, setSearchedSongs] = useState(null);
-    
+    const [yourSongsData, setYourSongsData] = useState(null);
+
     useEffect(() => {
         const savedToken = localStorage.getItem("token");
         if (savedToken) {
@@ -27,20 +28,35 @@ export const AuthContextProvider = ({ children }) => {
         }
         const token = localStorage.getItem("token");
         if (token) {
-            const decoded = jwtDecode(token);
-            // console.log("Decoded token:", decoded);
-            const name = decoded.name;
-            const id = decoded.id;
-            setUserName(name);
-            setUserID(id);
+            try {
+                const decoded = jwtDecode(token);
+                const now = Date.now() / 1000;
+                if (decoded.exp < now) {
+                    console.warn("Token is expired, logging out");
+                    handleLogout();
+                    return;
+                }
+
+                if (!decoded.name || !decoded.id) {
+                    console.warn("Token missing expected user data");
+                    handleLogout();
+                    return;
+                }
+
+                setUserName(decoded.name);
+                setUserID(decoded.id);
+            } catch (error) {
+                console.error("Invalid token:", error);
+                handleLogout();
+            }
         }
     }, [token]);
 
     useEffect(() => {
-        if(!token) return;
+        if (!token) return;
         const fetchSongs = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/api/songs`, {
+                const response = await axios.get(`${API_BASE_URL}/api/getPublicSongs`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'application/json'
@@ -56,6 +72,47 @@ export const AuthContextProvider = ({ children }) => {
         fetchSongs();
     }, [token])
 
+    useEffect(() => {
+
+        const fetchYourSongs = async () => {
+            if(!token) return;
+
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/getMySongs`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                setYourSongsData(response.data);
+                console.log("trying to fetch  your uploads")
+            } catch (error) {
+
+            }
+
+        }
+        fetchYourSongs();
+
+    }, [token]);
+
+    const updateYourSongs = async () => {
+        if(!token) return;
+            try {
+                const response = await axios.get(`${API_BASE_URL}/api/getMySongs`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                setYourSongsData(response.data);
+                console.log("trying to fetch  your uploads")
+            } catch (error) {
+
+            }
+
+        }
     const handleLogin = (t) => {
         // console.log("handleLogin is working");
         // console.log(t);
@@ -71,7 +128,7 @@ export const AuthContextProvider = ({ children }) => {
 
     const appendSongs = async () => {
         try {
-            const response = await axios.get(`${API_BASE_URL}/api/songs`,
+            const response = await axios.get(`${API_BASE_URL}/api/getPublicSongs`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -126,10 +183,6 @@ export const AuthContextProvider = ({ children }) => {
 
             console.log("✅ Song liked successfully:", res.data);
         } catch (error) {
-            // console.error("❌ Error liking song:");
-            // console.error("- Status:", error.response?.status);
-            // console.error("- Message:", error.response?.data?.message || error.message);
-            // console.error("- Full error:", error.response?.data || error.message);
 
             if (error.response?.status === 403) {
                 console.error("🔑 Token might be expired or invalid. Try logging in again.");
@@ -173,13 +226,13 @@ export const AuthContextProvider = ({ children }) => {
         if (!token) {
             navigate('/')
         }
-        if (query === ""){
+        if (query === "") {
             setSearchInput(query);
             setSearchedSongs(null);
             return;
         }
         setSearchInput(query);
-        
+
         try {
             const response = await axios.get(
                 `${API_BASE_URL}/api/search?q=${query}`,
@@ -191,14 +244,14 @@ export const AuthContextProvider = ({ children }) => {
             );
             setSearchedSongs(response.data);
         } catch (error) {
-            console.log("error in handlesearch",error);
+            console.log("error in handlesearch", error);
         }
 
     }
     const likedSongs = (songsData || [])
         .filter(song => song.visibility === 'public' && song.likedBy.includes(userID));
     return (
-        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs, likedSongs, searchInput, handleSearch, searchedSongs }}>
+        <AuthContext.Provider value={{ token, setToken, userName, userID, handleLogout, handleLogin, songsData, appendSongs, addLike, addPlayCount, getLikedSongs, likedSongs, searchInput, handleSearch, searchedSongs, API_BASE_URL,yourSongsData,updateYourSongs}}>
             {children}
         </AuthContext.Provider>
     );

@@ -34,7 +34,7 @@ const Footer = () => {
     const socialLinks = [
         { icon: Twitter, href: '#', name: 'Twitter' },
         { icon: Instagram, href: '#', name: 'Instagram' },
-        { icon: Github, href: '#', name: 'Github' },
+        { icon: Github, href: 'https://github.com/Vishwanath362', name: 'Github' },
         { icon: Mail, href: '#', name: 'Email' }
     ];
 

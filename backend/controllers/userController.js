@@ -23,7 +23,7 @@ const signup = async (req, res) => {
       expiresIn: "1h"
     });
 
-    return res.status(200).json({
+    return res.status(201).json({
       message: "Successfully created",
       token,
       user: {
