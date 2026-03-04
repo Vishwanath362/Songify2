@@ -181,7 +181,7 @@ export const AuthContextProvider = ({ children }) => {
                 }
             );
 
-            console.log("✅ Song liked successfully:", res.data);
+            console.log("✅ success in like/unlike:", res.data);
         } catch (error) {
 
             if (error.response?.status === 403) {

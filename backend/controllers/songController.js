@@ -244,7 +244,7 @@ const getSearchSongs = async (req, res) => {
   try {
     const query = req.query.q || "";
     const songs = await Song.find({
-      title: { $regex: query, $options: "i" },
+      visibility:'public',title: { $regex: query, $options: "i" },
     });
 
     res.status(200).json(songs);

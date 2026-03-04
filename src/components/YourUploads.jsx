@@ -11,9 +11,7 @@ const YourUploads = () => {
     appendSongs,
     token,
     userID,
-    addLike,
     addPlayCount,
-    API_BASE_URL,
     yourSongsData
   } = useAuthContext();
 
@@ -80,16 +78,8 @@ const YourUploads = () => {
                       </span>
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleLike(song._id)}
-                    className="group/heart p-3 md:p-5 rounded-full"
-                  >
-                    {song.likedBy?.includes(userID) ? (
-                      <Heart className="text-red-500 fill-red-500" />
-                    ) : (
-                      <Heart className="text-white" />
-                    )}
-                  </button>
+                 
+                  
                 </div>
                 <div className="relative z-10">
                   <audio
