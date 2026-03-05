@@ -35,11 +35,21 @@ const getAudioSignature = async (req, res) => {
 
 const saveSong = async (req, res) => {
   try {
-    const { title, genre, visibility, audioUrl, userID, userName } = req.body;
+    const { title, genre, visibility, audioUrl } = req.body;
+    const authenticatedUserId = req.user?.id;
 
-    if (!title || !genre || !visibility || !audioUrl || !userID) {
+    if (!title || !genre || !visibility || !audioUrl) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+    if (!authenticatedUserId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const currentUser = await User.findById(authenticatedUserId).select("name");
+    if (!currentUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
     let Visibility = visibility;
 
     const song = new Song({
@@ -48,8 +58,8 @@ const saveSong = async (req, res) => {
       audioUrl,
       coverImageUrl: "https://via.placeholder.com/400x400?text=Music",
       visibility: Visibility,
-      uploadedBy: userID,
-      userName: userName,
+      uploadedBy: authenticatedUserId,
+      userName: currentUser.name,
       playCount: 0,
       likedBy: []
     });
@@ -201,10 +211,14 @@ const addPlayCount = async (req, res) => {
     const song = await Song.findById(songId);
     const user = await User.findById(userId);
 
-    if (!song || !user) {
-      console.log("song or user error");
-
+    if (!song) {
+      return res.status(404).json({ message: "Song not found" });
     }
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
     await Song.findByIdAndUpdate(songId,
       { $inc: { playCount: 1 } })
 

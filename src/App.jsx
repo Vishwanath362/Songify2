@@ -19,34 +19,34 @@ function App() {
     <ErrorBoundary>
       <Router>
         <AuthContextProvider>
-        <Routes>
-         
-          <Route path="/" element={
-            <>
-              <Navbar />
-              <Hero />
-              <AboutUs />
-              <Footer />
-            </>
-          } />
-          
-          <Route path='/signup' element={<Signup />} />
-          <Route path='/login' element={<Login />}/>
-          <Route path='/about' element={<><Navbar /><AboutUs /><Footer/></>}/>
+          <Routes>
 
-          <Route path='/dashboard' element={<>
-            <Navbar />
-            <Dashboard />
-            <Footer />
-          </>}>
-            
-            <Route index element={<Songs />} /> 
-            <Route path='likedSongs' element={<LikedSongs />} /> 
-            <Route path='yourUploads' element={<YourUploads />} /> 
-          </Route>
-        </Routes>
-      </AuthContextProvider>
-    </Router>
+            <Route path="/" element={
+              <>
+                <Navbar />
+                <Hero />
+                <AboutUs />
+                <Footer />
+              </>
+            } />
+
+            <Route path='/signup' element={<Signup />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/about' element={<><Navbar /><AboutUs /><Footer /></>} />
+
+            <Route path='/dashboard' element={<>
+                <Navbar />
+                <Dashboard />
+                <Footer />
+              </>}>
+              <Route index element={<Songs />} />
+              <Route path='likedSongs' element={<LikedSongs />} />
+              <Route path='yourUploads' element={<YourUploads />} />
+
+            </Route>
+          </Routes>
+        </AuthContextProvider>
+      </Router>
     </ErrorBoundary>
   )
 }
